@@ -14,8 +14,17 @@ setInterval(async () => {
   const sellPrice = parseFloat(result.data.ask);
   const buyPrice = parseFloat(result.data.bid);
   const avgPrice = (buyPrice + sellPrice) / 2;
-  console.log(avgPrice.toFixed(5));
-}, 3000);
+
+  pool.query(
+    `INSERT INTO "dax-api"."DOGE_PRICE" (recent_prices) VALUES($1)`,
+    [avgPrice.toFixed(5)],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+    }
+  );
+}, 5000);
 
 app.get("/walletbalance", async (req, res) => {
   const data = await getRequestToAPI("/v1/account/getBalance");
@@ -27,14 +36,15 @@ app.get("/wallethistory", async (req, res) => {
   res.send(data);
 });
 
+app.get("/recentprices", async (req, res) => {
+  const result = await pool.query(
+    'SELECT recent_prices FROM "dax-api"."DOGE_PRICE" order by id desc limit 5'
+  );
+  console.log(result.rows);
+
+  res.json(result.rows);
+});
+
 app.listen(process.env.PORT, () => {
   console.log(`Server running at port ${process.env.PORT}`);
 });
-
-//try {
-//  const allData = await pool.query("SELECT * FROM brstats.people_data");
-//
-//  res.json(allData.rows);
-//} catch (error) {
-//  console.error(error.message);
-//}
