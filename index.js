@@ -4,7 +4,7 @@ const app = express();
 require("dotenv").config();
 
 const getRequestToAPI = require("./dax-api");
-const pool = require("./dbConnect");
+const pool = require("./db-connect");
 const recentPrices = require("./poolRecentPrices");
 
 app.use(json());
@@ -24,7 +24,7 @@ setInterval(async () => {
       }
     }
   );
-}, 5000);
+}, 55000);
 
 app.get("/walletbalance", async (req, res) => {
   const data = await getRequestToAPI("/v1/account/getBalance");
@@ -40,8 +40,6 @@ app.get("/recentprices", async (req, res) => {
   const result = await pool.query(
     'SELECT recent_prices FROM "dax-api"."DOGE_PRICE" order by id desc limit 5'
   );
-  console.log(result.rows);
-
   res.json(result.rows);
 });
 
