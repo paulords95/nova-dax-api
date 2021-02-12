@@ -38,7 +38,7 @@ app.get("/wallethistory", async (req, res) => {
 
 app.get("/recentprices", async (req, res) => {
   const result = await pool.query(
-    'SELECT recent_prices FROM "dax-api"."DOGE_PRICE" order by id desc limit 5'
+    'SELECT id, recent_prices, timestamp FROM "dax-api"."DOGE_PRICE" order by id desc limit 11'
   );
   res.json(result.rows);
 });
