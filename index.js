@@ -1,5 +1,6 @@
 const { json } = require("express");
 const express = require("express");
+const fetch = require("node-fetch");
 const app = express();
 require("dotenv").config();
 
@@ -24,11 +25,37 @@ setInterval(async () => {
       }
     }
   );
-}, 55000);
+}, 350000);
 
 app.get("/walletbalance", async (req, res) => {
   const data = await getRequestToAPI("/v1/account/getBalance");
   res.send(data);
+});
+
+
+app.get("/walletbalancepercentage", async (req, res) => {
+  const data = await getRequestToAPI("/v1/account/getBalance");
+  const result = []
+  for (let i of data.data) {
+
+    if (i.balance >= 0) {
+      fetch(`https://api.novadax.com/v1/market/ticker?symbol=${i.currency}_BRL`).then(async (response) => {
+        const priceCurrency = await response.json()
+        const cashBalance = parseInt(i.balance) * parseFloat(priceCurrency.data.ask)
+        result.push({
+          balance: i.balance,
+          price: priceCurrency.data.lastPrice,
+          balanceInFiat: cashBalance.toFixed(2)
+        })
+        
+      }).catch((e) => {
+        console.log(e.message)
+      })
+      
+    }
+    res.send(result);
+  }
+ 
 });
 
 app.get("/wallethistory", async (req, res) => {
@@ -38,7 +65,7 @@ app.get("/wallethistory", async (req, res) => {
 
 app.get("/recentprices", async (req, res) => {
   const result = await pool.query(
-    'SELECT id, recent_prices, timestamp FROM "dax-api"."DOGE_PRICE" order by id desc limit 50'
+    'SELECT id, recent_prices, timestamp FROM "dax-api"."DOGE_PRICE" order by id desc limit 150'
   );
   res.json(result.rows);
 });
