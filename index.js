@@ -33,34 +33,37 @@ app.get("/walletbalance", async (req, res) => {
 });
 
 
-const getPriceOfCurrency = (asset) => {
+const getPriceOfCurrency = async (asset) => {
   const result = []
   for (let i of asset) {
-    if (i.balance > 0) {
-      fetch(`https://api.novadax.com/v1/market/ticker?symbol=${i.currency}_BRL`).then(async (response) => {
-        const priceCurrency = await response.json()
-        const cashBalance = parseInt(i.balance) * parseFloat(priceCurrency.data.ask)
+    if (i.balance > 0 && i.currency != "BRL") {
+      const apiCallResponse = await fetch(`https://api.novadax.com/v1/market/ticker?symbol=${i.currency}_BRL`)
+      const priceCurrency = await apiCallResponse.json()
+      if (priceCurrency.data != null) {
+        const cashBalance = parseFloat(i.balance) * parseFloat(priceCurrency.data.ask)
         result.push({
           balance: i.balance,
           price: priceCurrency.data.lastPrice,
-          balanceInFiat: cashBalance.toFixed(2)
+          balanceInFiat: cashBalance.toFixed(2),
+          currency: i.currency
         })
-      
-      }).catch((e) => {
-        console.log(e.message)
-      })
+      }
+     
     }
   }
-  console.log(result)
-  return result
+  return (result)
 }
 
 
 app.get("/walletbalancepercentage", async (req, res) => {
+ try {
   const data = await getRequestToAPI("/v1/account/getBalance");
-
- res.send(await getPriceOfCurrency(data.data))
-  
+   const stats = await getPriceOfCurrency(data.data)
+   
+  res.send(stats)
+ } catch (error) {
+   console.log(error)
+ }
 });
 
 app.get("/wallethistory", async (req, res) => {
