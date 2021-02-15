@@ -47,15 +47,31 @@ const getPriceOfCurrency = async (asset) => {
           balance: i.balance,
           price: priceCurrency.data.lastPrice,
           balanceInFiat: cashBalance.toFixed(2),
-          currency: i.currency
+          currency: i.currency,
         })
+        
       }
+      
     }
   }
-  result.push( {
-    totalValue: total.toFixed(2)
+
+  const response = []
+
+  for (let j of result) {
+    console.log(j)
+    response.push({
+      balance: j.balance,
+      price:j.price,
+      balanceInFiat: j.balanceInFiat,
+      currency: j.currency,
+      percentage: (parseFloat(j.balanceInFiat).toFixed(1) / parseFloat(total).toFixed(1) * 100).toFixed(1)
+    })
+  }
+
+  response.push( {
+    totalAssets: total.toFixed(2)
   })
-  return (result)
+  return (response)
 }
 
 
