@@ -35,12 +35,14 @@ app.get("/walletbalance", async (req, res) => {
 
 const getPriceOfCurrency = async (asset) => {
   const result = []
+  let total = 0
   for (let i of asset) {
     if (i.balance > 0 && i.currency != "BRL") {
       const apiCallResponse = await fetch(`https://api.novadax.com/v1/market/ticker?symbol=${i.currency}_BRL`)
       const priceCurrency = await apiCallResponse.json()
       if (priceCurrency.data != null) {
         const cashBalance = parseFloat(i.balance) * parseFloat(priceCurrency.data.ask)
+        total += parseFloat(cashBalance.toFixed(2))
         result.push({
           balance: i.balance,
           price: priceCurrency.data.lastPrice,
@@ -48,9 +50,11 @@ const getPriceOfCurrency = async (asset) => {
           currency: i.currency
         })
       }
-     
     }
   }
+  result.push( {
+    totalValue: total.toFixed(2)
+  })
   return (result)
 }
 
