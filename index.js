@@ -73,7 +73,6 @@ const getPriceOfCurrency = async (asset) => {
   return (response)
 }
 
-
 app.get("/walletbalancepercentage", async (req, res) => {
  try {
   const data = await getRequestToAPI("/v1/account/getBalance");
