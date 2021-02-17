@@ -9,6 +9,8 @@ services:
       - public_01
     ports:
       - 9433:9433
+    volumes:
+      - ./.env:/home/.env
 
 networks:
   public_01:
