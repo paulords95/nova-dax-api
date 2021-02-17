@@ -15,6 +15,4 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa
-          ls
-          scp -o StrictHostKeyChecking=no docker-compose.yml root@$SERVER_IP:/root/nova-dax-api
-          ssh -o StrictHostKeyChecking=no root@$SERVER_IP "echo '${{ secrets.GITHUB_TOKEN }}' | sudo docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin && sudo docker-compose pull && docker-compose down && docker-compose up -d"
+          ssh -o StrictHostKeyChecking=no root@$SERVER_IP "cd /root/nova-dax-api && echo '${{ secrets.GITHUB_TOKEN }}' | sudo docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin && sudo docker-compose pull && docker-compose down && docker-compose up -d"
