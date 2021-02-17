@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  backend:
+    restart: unless-stopped
+    container_name: backend
+    image: docker.pkg.github.com/paulords95/nova-dax-api/nova-dax-api:latest
+    networks:
+      - public_01
+    ports:
+      - 9433:9433
+
+networks:
+  public_01:

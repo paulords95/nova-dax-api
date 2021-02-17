@@ -58,7 +58,6 @@ const getPriceOfCurrency = async (asset) => {
   const response = []
 
   for (let j of result) {
-    console.log(j)
     response.push({
       balance: j.balance,
       price:j.price,
@@ -78,8 +77,7 @@ const getPriceOfCurrency = async (asset) => {
 app.get("/walletbalancepercentage", async (req, res) => {
  try {
   const data = await getRequestToAPI("/v1/account/getBalance");
-   const stats = await getPriceOfCurrency(data.data)
-   
+  const stats = await getPriceOfCurrency(data.data)
   res.send(stats)
  } catch (error) {
    console.log(error)
