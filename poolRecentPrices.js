@@ -4,7 +4,7 @@ const app = express();
 
 const poolRecentPrices = () => {
   return new Promise((resolve, reject) => {
-    fetch("https://api.novadax.com/v1/market/ticker?symbol=DOGE_BRL", {
+    fetch("https://api.novadax.com/v1/market/ticker?symbol=BTC_BRL", {
       method: "GET",
     })
       .then((res) => {
