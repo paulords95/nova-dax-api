@@ -24,7 +24,7 @@ setInterval(async () => {
       }
     }
   );
-}, 5000);
+}, 30000);
 
 app.get("/walletbalance", async (req, res) => {
   const data = await getRequestToAPI("/v1/account/getBalance");
@@ -89,7 +89,7 @@ app.get("/wallethistory", async (req, res) => {
 
 app.get("/recentprices", async (req, res) => {
   const result = await pool.query(
-    'SELECT id, recent_prices, timestamp FROM "dax-api"."DOGE_PRICE" order by id desc limit 50'
+    'SELECT id, recent_prices, timestamp FROM "dax-api"."DOGE_PRICE" order by id desc limit 350'
   );
   const response = []
   for (let i of result.rows) {
