@@ -15,17 +15,16 @@ setInterval(async () => {
   const sellPrice = parseFloat(result.data.ask);
   const buyPrice = parseFloat(result.data.bid);
   const avgPrice = (buyPrice + sellPrice) / 2;
-
   pool.query(
     `INSERT INTO "dax-api"."DOGE_PRICE" (recent_prices) VALUES($1)`,
-    [avgPrice.toFixed(5)],
+    [parseInt(avgPrice)],
     (error, results) => {
       if (error) {
         throw error;
       }
     }
   );
-}, 350000);
+}, 5000);
 
 app.get("/walletbalance", async (req, res) => {
   const data = await getRequestToAPI("/v1/account/getBalance");
@@ -90,9 +89,17 @@ app.get("/wallethistory", async (req, res) => {
 
 app.get("/recentprices", async (req, res) => {
   const result = await pool.query(
-    'SELECT id, recent_prices, timestamp FROM "dax-api"."DOGE_PRICE" order by id desc limit 150'
+    'SELECT id, recent_prices, timestamp FROM "dax-api"."DOGE_PRICE" order by id desc limit 50'
   );
-  res.json(result.rows);
+  const response = []
+  for (let i of result.rows) {
+    response.push({
+      id: i.id,
+      recent_prices: parseInt(i.recent_prices),
+      timestamp: i.timestamp
+    })
+  }
+  res.json(response);
 });
 
 app.listen(process.env.PORT, () => {
