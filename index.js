@@ -11,7 +11,58 @@ const recentPrices = require("./poolRecentPrices");
 app.use(json());
 
 setInterval(async () => {
-  const result = await recentPrices();
+  const result = await recentPrices("BTC");
+  const sellPrice = parseFloat(result.data.ask);
+  const buyPrice = parseFloat(result.data.bid);
+  const avgPrice = (buyPrice + sellPrice) / 2;
+
+  pool.query(
+    `INSERT INTO "dax-api"."BTC_PRICE" (recent_prices) VALUES($1)`,
+    [avgPrice.toFixed(5)],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+    }
+  );
+}, 350000);
+
+setInterval(async () => {
+  const result = await recentPrices("ADA");
+  const sellPrice = parseFloat(result.data.ask);
+  const buyPrice = parseFloat(result.data.bid);
+  const avgPrice = (buyPrice + sellPrice) / 2;
+
+  pool.query(
+    `INSERT INTO "dax-api"."ADA_PRICE" (recent_prices) VALUES($1)`,
+    [avgPrice.toFixed(5)],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+    }
+  );
+}, 35000);
+
+setInterval(async () => {
+  const result = await recentPrices("ETH");
+  const sellPrice = parseFloat(result.data.ask);
+  const buyPrice = parseFloat(result.data.bid);
+  const avgPrice = (buyPrice + sellPrice) / 2;
+
+  pool.query(
+    `INSERT INTO "dax-api"."ETH_PRICE" (recent_prices) VALUES($1)`,
+    [avgPrice.toFixed(5)],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+    }
+  );
+}, 35000);
+
+setInterval(async () => {
+  const result = await recentPrices("DOGE");
   const sellPrice = parseFloat(result.data.ask);
   const buyPrice = parseFloat(result.data.bid);
   const avgPrice = (buyPrice + sellPrice) / 2;
@@ -25,7 +76,7 @@ setInterval(async () => {
       }
     }
   );
-}, 350000);
+}, 35000);
 
 app.get("/walletbalance", async (req, res) => {
   const data = await getRequestToAPI("/v1/account/getBalance");
@@ -95,7 +146,9 @@ app.get("/walletbalancepercentage", async (req, res) => {
 });
 
 app.get("/wallethistory", async (req, res) => {
-  const data = await getRequestToAPI("/v1/wallet/query/deposit-withdraw");
+  const data = await getRequestToAPI(
+    "/v1/wallet/query/deposit-withdraw?currency=BTC&type=coin_in&size=10&direct=desc"
+  );
   res.send(data);
 });
 

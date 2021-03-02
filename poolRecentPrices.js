@@ -2,9 +2,9 @@ const fetch = require("node-fetch");
 const express = require("express");
 const app = express();
 
-const poolRecentPrices = () => {
+const poolRecentPrices = (currency) => {
   return new Promise((resolve, reject) => {
-    fetch("https://api.novadax.com/v1/market/ticker?symbol=BTC_BRL", {
+    fetch(`https://api.novadax.com/v1/market/ticker?symbol=${currency}_BRL`, {
       method: "GET",
     })
       .then((res) => {
