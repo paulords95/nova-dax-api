@@ -159,6 +159,15 @@ app.get("/recentprices", async (req, res) => {
   res.json(result.rows);
 });
 
+app.get("/recentprices/:currency", async (req, res) => {
+  const result = await pool.query(
+    `SELECT id, recent_prices, timestamp FROM "dax-api"."${req.params.currency
+      .toString()
+      .toUpperCase()}_PRICE" order by id desc limit 150`
+  );
+  res.json(result.rows);
+});
+
 app.listen(process.env.PORT, () => {
   console.log(`Server running at port ${process.env.PORT}`);
 });
