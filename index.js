@@ -154,7 +154,7 @@ app.get("/wallethistory", async (req, res) => {
 
 app.get("/recentprices", async (req, res) => {
   const result = await pool.query(
-    'SELECT id, recent_prices, timestamp FROM "dax-api"."DOGE_PRICE" order by id desc limit 150'
+    'SELECT id, recent_prices, timestamp FROM "dax-api"."BTC_PRICE" order by id desc limit 150'
   );
   res.json(result.rows);
 });
