@@ -128,13 +128,13 @@ const getPriceOfCurrency = async (asset) => {
   return response;
 };
 
-app.get("/walletbalancepercentage", async (req, res) => {
+app.get("/walletbalancepercentage/:accessKey/:secretKey", async (req, res) => {
   let response = "";
   try {
     const data = await getRequestToAPI(
       "/v1/account/getBalance",
-      req.body.secretKey,
-      req.body.accessKey
+      req.params.secretKey,
+      req.params.accessKey
     );
 
     const asset = [];
@@ -148,8 +148,7 @@ app.get("/walletbalancepercentage", async (req, res) => {
     const stats = await getPriceOfCurrency(asset);
     response = stats;
   } catch (error) {
-    response =
-      "Chaves de API estão incorretas ou não há dados na carteira da exchange";
+    response = false;
   }
   res.send(response);
 });
