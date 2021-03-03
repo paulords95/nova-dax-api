@@ -129,20 +129,29 @@ const getPriceOfCurrency = async (asset) => {
 };
 
 app.get("/walletbalancepercentage", async (req, res) => {
+  let response = "";
   try {
-    const data = await getRequestToAPI("/v1/account/getBalance");
+    const data = await getRequestToAPI(
+      "/v1/account/getBalance",
+      req.body.secretKey,
+      req.body.accessKey
+    );
 
     const asset = [];
+
     for (let i of data.data) {
       if (i.balance > 0) {
         asset.push(i);
       }
     }
+
     const stats = await getPriceOfCurrency(asset);
-    res.send(stats);
+    response = stats;
   } catch (error) {
-    console.log(error);
+    response =
+      "Chaves de API estão incorretas ou não há dados na carteira da exchange";
   }
+  res.send(response);
 });
 
 app.get("/wallethistory", async (req, res) => {
