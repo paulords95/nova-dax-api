@@ -42,7 +42,7 @@ setInterval(async () => {
       }
     }
   );
-}, 35000);
+}, 15000);
 
 setInterval(async () => {
   const result = await recentPrices("ETH");
@@ -59,7 +59,7 @@ setInterval(async () => {
       }
     }
   );
-}, 35000);
+}, 15000);
 
 setInterval(async () => {
   const result = await recentPrices("DOGE");
@@ -76,7 +76,7 @@ setInterval(async () => {
       }
     }
   );
-}, 35000);
+}, 15000);
 
 app.get("/walletbalance", async (req, res) => {
   const data = await getRequestToAPI("/v1/account/getBalance");
