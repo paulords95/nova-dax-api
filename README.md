@@ -1,3 +1,3 @@
 # nova-dax-api
 
-API para registro de dados sobre preço e comunicação com a API oficial
+API para monitorar e registrar preços de criptomoedas e armazenar em banco de dados PostgreSQL e também fazer consultas referente a saldo na API oficial da NovaDAX
